@@ -8,8 +8,7 @@
         update_cache: yes
 
     - name: Install Docker
-      shell: apt install docker.io -y 
-      become: true
+      shell: apt install docker.io -y
 
     - name: Ensure Docker service is started and enabled
       service:
@@ -37,6 +36,12 @@
       command: docker build -t samplesite /home/ubuntu/samplesite
       args:
         chdir: /home/ubuntu/samplesite
+
+    - name: Stop existing container (if running)
+      shell: docker stop samplesite || true
+
+    - name: Remove existing container (if present)
+      shell: docker rm samplesite || true
 
     - name: Run Docker container
       command: docker run -d --name samplesite -p 80:80 samplesite
